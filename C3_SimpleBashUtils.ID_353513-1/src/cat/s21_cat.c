@@ -1,10 +1,10 @@
 #include "s21_cat.h"
 
 void parse_args(int argc, char *argv[], options_t *opts, char ***files,
-               int *file_count) {
+                int *file_count) {
   *file_count = 0;
   *files = NULL;
-  
+
   // Подсчитываем файлы
   int potential_files = 0;
   for (int i = 1; i < argc; i++) {
@@ -15,7 +15,7 @@ void parse_args(int argc, char *argv[], options_t *opts, char ***files,
 
   // Выделяем память для файлов
   if (potential_files > 0) {
-    *files = malloc(sizeof(char*) * potential_files);
+    *files = malloc(sizeof(char *) * potential_files);
     if (!*files) {
       fprintf(stderr, "memory allocation failed\n");
       exit(1);
@@ -38,7 +38,10 @@ void parse_args(int argc, char *argv[], options_t *opts, char ***files,
         opts->show_tabs = 1;
         opts->show_nonprinting = 1;
       } else {
-        fprintf(stderr, "cat: invalid option -- '%c'\nTry 'cat --help' for more information.\n", argv[i][1]);
+        fprintf(stderr,
+                "cat: invalid option -- '%c'\nTry 'cat --help' for more "
+                "information.\n",
+                argv[i][1]);
         if (*files) free(*files);
         exit(1);
       }
@@ -87,12 +90,12 @@ void process_file(const char *filename, options_t opts, int *error_occurred) {
   while ((read = getline(&line, &len, fp)) != -1) {
     // Определяем, пустая ли строка
     int is_empty = (read == 1 && line[0] == '\n');
-    
+
     // Обработка флага -s (сжатие пустых строк)
     if (opts.squeeze_blank && is_empty) {
       consecutive_empty++;
       if (consecutive_empty > 1) {
-        continue; // Пропускаем лишние пустые строки
+        continue;  // Пропускаем лишние пустые строки
       }
     } else {
       consecutive_empty = is_empty ? 1 : 0;
